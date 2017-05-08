@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Code"
+        android:inputType="textCapCharacters"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Enter Code"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="4"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputBusinessName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Business Name"
+        android:inputType="textPersonName"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Business Name"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="6"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputBusinesPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Business Tel Number"
+        android:inputType="phone"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Business Tel Number"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="8"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputPhysicalLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Physical Location"
+        android:inputType="textPostalAddress"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Physical Location"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="5"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputRegion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Region"
+        android:inputType="textPostalAddress"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Region"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="5"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputTown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Town"
+        android:inputType="textPersonName"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Town"
+        app:met_floatingLabelTextColor="#5946c9"
+        app:met_minCharacters="4"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/inputLandMark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Landmark(Optional)"
+        android:inputType="textPostalAddress"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Landmark(Optional)"
+        app:met_floatingLabelTextColor="#3f22e6"/>
+    </LinearLayout>
+</ScrollView>
