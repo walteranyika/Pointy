@@ -157,6 +157,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             }
             //progress.setVisibility(View.VISIBLE);
             dialog.show();
+
             int attempts=0;
             while (notArrived) {
                 try {
@@ -176,18 +177,16 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                             double longitude = location.getLongitude();
                             notArrived = false;
                             Log.d("STATE_GPS", latitude + " " + longitude);
-
-                            // Toast.makeText(this, "You are at " + latitude + "  " + longitude, Toast.LENGTH_SHORT).show();
-                            //tvLocation.setText("We are at Latitude: " + latitude + "  \nLongitude :" + longitude);
                             getMyLocationAddress(latitude, longitude);
                             //progress.setVisibility(View.INVISIBLE);
-                        } else {
+                        } else{
                             //Toast.makeText(this, "GPS is Still Getting Cordinates", Toast.LENGTH_SHORT).show();
                             Log.d("STATE_GPS", "Trying To Fetch Cordinates");
                         }
                     }
                 }else{
                     dialog.dismiss();
+                    stopUsingGPS();
                     break;
                 }
             }
@@ -327,6 +326,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("SERVER", responseString);
                 dialog.dismiss();
+                stopUsingGPS();
                 Toast.makeText(getApplicationContext(), "Failed To Upload Location Details To The Server. Try Again", Toast.LENGTH_SHORT).show();
             }
 
@@ -334,6 +334,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.d("SERVER", responseString);
                 dialog.dismiss();
+                stopUsingGPS();
                 try {
                     JSONObject obj = new JSONObject(responseString);
                     String resp = obj.getString("response");
@@ -359,6 +360,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         mMaterialEditTextCode.setText("");
         mMaterialEditTextLandmark.setText("");
         mMaterialEditTextRegigion.setText("");
+        mMaterialEditTextCode.requestFocus();
     }
 
 }
