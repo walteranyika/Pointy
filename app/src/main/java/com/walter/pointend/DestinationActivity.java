@@ -1,6 +1,7 @@
 package com.walter.pointend;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +71,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     String phone = "";
 
     LocationManager locationManager;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,16 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         names = prefs.getString("names", "John Doe");
         phone = prefs.getString("phone", "");
         //tvNames.setText(names);
+        dialog = new ProgressDialog(DestinationActivity.this,R.style.full_screen_dialog){
+            @Override
+            protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.full_screen_dialog);
+                getWindow().setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+            }
+        };
+        dialog.setCancelable(false);
+
         mMaterialEditTextTown.addTextChangedListener(this);
     }
 
@@ -143,6 +156,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 return;
             }
             //progress.setVisibility(View.VISIBLE);
+            dialog.show();
             while (notArrived) {
                 try {
                     Thread.sleep(2000);
@@ -295,7 +309,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         params.put("time", item.getTime());
 
         params.put("code", item.getCode());
-        params.put("busines_name", item.getBizName());
+        params.put("biz_name", item.getBizName());
         params.put("physical_location", item.getPhysicalLocation());
         params.put("biz_tel_num", item.getBizTelPhone());
         params.put("biz_region", item.getRegion());
@@ -305,12 +319,14 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("SERVER", responseString);
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Failed To Upload Location Details To The Server. Try Again", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.d("SERVER", responseString);
+                dialog.dismiss();
                 try {
                     JSONObject obj = new JSONObject(responseString);
                     String resp = obj.getString("response");
