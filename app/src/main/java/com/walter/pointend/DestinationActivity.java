@@ -157,31 +157,38 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             }
             //progress.setVisibility(View.VISIBLE);
             dialog.show();
+            int attempts=0;
             while (notArrived) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                Log.d("STATE_GPS", "GPS Enabled");
-                if (locationManager != null) {
-                    Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if (location != null) {
-                        //progress.setVisibility(View.VISIBLE);
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-                        notArrived = false;
-                        Log.d("STATE_GPS", latitude + " " + longitude);
+                attempts++;
+                if (attempts<=23) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                    Log.d("STATE_GPS", "GPS Enabled");
+                    if (locationManager != null) {
+                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
+                            //progress.setVisibility(View.VISIBLE);
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            notArrived = false;
+                            Log.d("STATE_GPS", latitude + " " + longitude);
 
-                        // Toast.makeText(this, "You are at " + latitude + "  " + longitude, Toast.LENGTH_SHORT).show();
-                        //tvLocation.setText("We are at Latitude: " + latitude + "  \nLongitude :" + longitude);
-                        getMyLocationAddress(latitude, longitude);
-                        //progress.setVisibility(View.INVISIBLE);
-                    } else {
-                        //Toast.makeText(this, "GPS is Still Getting Cordinates", Toast.LENGTH_SHORT).show();
-                        Log.d("STATE_GPS", "Trying To Fetch Cordinates");
+                            // Toast.makeText(this, "You are at " + latitude + "  " + longitude, Toast.LENGTH_SHORT).show();
+                            //tvLocation.setText("We are at Latitude: " + latitude + "  \nLongitude :" + longitude);
+                            getMyLocationAddress(latitude, longitude);
+                            //progress.setVisibility(View.INVISIBLE);
+                        } else {
+                            //Toast.makeText(this, "GPS is Still Getting Cordinates", Toast.LENGTH_SHORT).show();
+                            Log.d("STATE_GPS", "Trying To Fetch Cordinates");
+                        }
                     }
+                }else{
+                    dialog.dismiss();
+                    break;
                 }
             }
 
@@ -330,7 +337,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 try {
                     JSONObject obj = new JSONObject(responseString);
                     String resp = obj.getString("response");
-                    if(resp.toLowerCase().contains("success")){
+                    if(resp.toLowerCase().contains("succes")){
                         clear_fields();
                     }
 

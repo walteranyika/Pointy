@@ -58,9 +58,9 @@ public class AdminActivity extends AppCompatActivity {
                         String  time =obj.getString("time");
                         String date = obj.getString("date");
 
-                        Item item =new Item();
+                        /*Item item =new Item();
                         item.names =names; item.address=address; item.longitude=longitude; item.latitude=latitude; item.time=time; item.date=date;
-                        data.add(item);
+                        data.add(item);*/
                     }
                     adapter.notifyDataSetChanged();
 
