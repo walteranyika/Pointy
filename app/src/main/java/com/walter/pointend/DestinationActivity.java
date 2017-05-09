@@ -44,28 +44,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-public class DestinationActivity extends AppCompatActivity implements TextWatcher{// implements LocationListener
+public class DestinationActivity extends AppCompatActivity implements TextWatcher, LocationListener {// implements LocationListener
 
-  /*  @BindView(R.id.tvNames)
-    TextView tvNames;
-    @BindView(R.id.tvGPStaus)
-    TextView tvGPStatus;
-    @BindView(R.id.tvLocation)
-    TextView tvLocation;
-    @BindView(R.id.progressLocation)
-    ProgressBar progress;*/
     MenuItem sendItem;
-    @BindView(R.id.inputCode) MaterialEditText mMaterialEditTextCode;
-    @BindView(R.id.inputBusinessName) MaterialEditText mMaterialEditTextBussinesName;
-    @BindView(R.id.inputBusinesPhone) MaterialEditText mMaterialEditTextBusinesNumber;
-    @BindView(R.id.inputPhysicalLocation) MaterialEditText mMaterialEditTextPhysicalLoc;
-    @BindView(R.id.inputRegion) MaterialEditText mMaterialEditTextRegigion;
-    @BindView(R.id.inputTown) MaterialEditText mMaterialEditTextTown;
-    @BindView(R.id.inputLandMark) MaterialEditText mMaterialEditTextLandmark;
+    @BindView(R.id.inputCode)
+    MaterialEditText mMaterialEditTextCode;
+    @BindView(R.id.inputBusinessName)
+    MaterialEditText mMaterialEditTextBussinesName;
+    @BindView(R.id.inputBusinesPhone)
+    MaterialEditText mMaterialEditTextBusinesNumber;
+    @BindView(R.id.inputPhysicalLocation)
+    MaterialEditText mMaterialEditTextPhysicalLoc;
+    @BindView(R.id.inputRegion)
+    MaterialEditText mMaterialEditTextRegigion;
+    @BindView(R.id.inputTown)
+    MaterialEditText mMaterialEditTextTown;
+    @BindView(R.id.inputLandMark)
+    MaterialEditText mMaterialEditTextLandmark;
 
     boolean notArrived = true;
 
-    int count = 0;
+
     String names = "";
     String phone = "";
 
@@ -86,7 +85,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         sendItem = menu.findItem(R.id.send);
         sendItem.setVisible(false);
         return super.onCreateOptionsMenu(menu);
@@ -95,8 +94,8 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //TODO send items
-        if (item.getItemId()==R.id.send){
-
+        if (item.getItemId() == R.id.send) {
+          update_location();
         }
 
         return super.onOptionsItemSelected(item);
@@ -110,33 +109,32 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        String code=mMaterialEditTextCode.getText().toString().trim();
-        String bizName=mMaterialEditTextBussinesName.getText().toString().trim();
-        String bizPhoneNumber=mMaterialEditTextBusinesNumber.getText().toString().trim();
-        String physicalLocation=mMaterialEditTextPhysicalLoc.getText().toString().trim();
-        String region=mMaterialEditTextRegigion.getText().toString().trim();
-        String town=mMaterialEditTextTown.getText().toString().trim();
+        String code = mMaterialEditTextCode.getText().toString().trim();
+        String bizName = mMaterialEditTextBussinesName.getText().toString().trim();
+        String bizPhoneNumber = mMaterialEditTextBusinesNumber.getText().toString().trim();
+        String physicalLocation = mMaterialEditTextPhysicalLoc.getText().toString().trim();
+        String region = mMaterialEditTextRegigion.getText().toString().trim();
+        String town = mMaterialEditTextTown.getText().toString().trim();
 
-       if(!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty())
-       {
-         sendItem.setVisible(true);
-       }
+        if (!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty()) {
+            sendItem.setVisible(true);
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        String code=mMaterialEditTextCode.getText().toString().trim();
-        String bizName=mMaterialEditTextBussinesName.getText().toString().trim();
-        String bizPhoneNumber=mMaterialEditTextBusinesNumber.getText().toString().trim();
-        String physicalLocation=mMaterialEditTextPhysicalLoc.getText().toString().trim();
-        String region=mMaterialEditTextRegigion.getText().toString().trim();
-        String town=mMaterialEditTextTown.getText().toString().trim();
-        if(!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty())
-        {
+        String code = mMaterialEditTextCode.getText().toString().trim();
+        String bizName = mMaterialEditTextBussinesName.getText().toString().trim();
+        String bizPhoneNumber = mMaterialEditTextBusinesNumber.getText().toString().trim();
+        String physicalLocation = mMaterialEditTextPhysicalLoc.getText().toString().trim();
+        String region = mMaterialEditTextRegigion.getText().toString().trim();
+        String town = mMaterialEditTextTown.getText().toString().trim();
+        if (!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty()) {
             sendItem.setVisible(true);
         }
     }
-    /*  public void update_location(View view)  {
+
+    public void update_location() {
         boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!isGPSEnabled) {
             showSettingsAlert();
@@ -144,32 +142,31 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            progress.setVisibility(View.VISIBLE);
-            while (notArrived)
-            {
+            //progress.setVisibility(View.VISIBLE);
+            while (notArrived) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                Log.d("GPS Enabled", "GPS Enabled");
+                Log.d("STATE_GPS", "GPS Enabled");
                 if (locationManager != null) {
                     Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (location != null) {
-                        progress.setVisibility(View.VISIBLE);
+                        //progress.setVisibility(View.VISIBLE);
                         double latitude = location.getLatitude();
                         double longitude = location.getLongitude();
-                        notArrived=false;
-                        Log.d("TRYING",latitude+" "+longitude);
+                        notArrived = false;
+                        Log.d("STATE_GPS", latitude + " " + longitude);
 
                         // Toast.makeText(this, "You are at " + latitude + "  " + longitude, Toast.LENGTH_SHORT).show();
-                        tvLocation.setText("We are at Latitude: " + latitude + "  \nLongitude :" + longitude);
+                        //tvLocation.setText("We are at Latitude: " + latitude + "  \nLongitude :" + longitude);
                         getMyLocationAddress(latitude, longitude);
-                        progress.setVisibility(View.INVISIBLE);
+                        //progress.setVisibility(View.INVISIBLE);
                     } else {
                         //Toast.makeText(this, "GPS is Still Getting Cordinates", Toast.LENGTH_SHORT).show();
-                        Log.d("TRYING","Trying To Fetch Cordinates");
+                        Log.d("STATE_GPS", "Trying To Fetch Cordinates");
                     }
                 }
             }
@@ -178,9 +175,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         }
     }
 
-    *//**
-     * Function to show settings alert dialog
-     *//*
+
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
@@ -200,14 +195,12 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 startActivity(intent);
             }
         });
-
         // on pressing cancel button
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-
         // Showing Alert Message
         alertDialog.show();
     }
@@ -224,12 +217,14 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
 
     @Override
     public void onProviderEnabled(String provider) {
-        tvGPStatus.setText("GPS is Enabled");
+        //tvGPStatus.setText("GPS is Enabled");
+        Log.d("GPS_STATUS", "Provider enabled");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        tvGPStatus.setText("GPS is currently disabled");
+        //tvGPStatus.setText("GPS is currently disabled");
+        Log.d("GPS_STATUS", "Provider disabled");
     }
 
     public void stopUsingGPS() {
@@ -241,7 +236,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     public void getMyLocationAddress(double lati, double longi) {
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        progress.setVisibility(View.VISIBLE);
+        //progress.setVisibility(View.VISIBLE);
         try {
 
             //Place your latitude and longitude
@@ -264,17 +259,24 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 double longitude = longi;
                 double latitude = lati;
                 String phoneNumber = phone;
-                upload_location(phoneNumber, address, longitude, latitude, time);
-                tvLocation.setText("I am at: " + strAddress.toString());
-                progress.setVisibility(View.INVISIBLE);
+                //String address, String longitude, String latitude, String time, String date, String code, String bizName, String bizTelPhone, String physicalLocation, String region, String town, String landmark) {
+                String code = mMaterialEditTextCode.getText().toString().trim();
+                String bizName = mMaterialEditTextBussinesName.getText().toString().trim();
+                String bizPhoneNumber = mMaterialEditTextBusinesNumber.getText().toString().trim();
+                String physicalLocation = mMaterialEditTextPhysicalLoc.getText().toString().trim();
+                String region = mMaterialEditTextRegigion.getText().toString().trim();
+                String town = mMaterialEditTextTown.getText().toString().trim();
+                upload_location(new Item(address, longitude + "", latitude + "", time, "", code, bizName, bizPhoneNumber, physicalLocation, region, town, mMaterialEditTextLandmark.getText().toString()));
+                //tvLocation.setText("I am at: " + strAddress.toString());
+                //progress.setVisibility(View.INVISIBLE);
 
             } else {
-                tvLocation.setText("No location found..!");
-                progress.setVisibility(View.INVISIBLE);
+                //tvLocation.setText("No location found..!");
+                //progress.setVisibility(View.INVISIBLE);
             }
 
         } catch (IOException e) {
-            progress.setVisibility(View.INVISIBLE);
+            //progress.setVisibility(View.INVISIBLE);
             // TODO Auto-generated catch block
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Could not get address..!", Toast.LENGTH_LONG).show();
@@ -282,23 +284,23 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
 
     }
 
-    public void open_admin(View view) {
-        count++;
-        if (count == 5) {
-            count = 0;
-            startActivity(new Intent(this, AdminActivity.class));
-        }
-    }
-
-    private void upload_location(String phone, String address, double longitude, double latitude, String time) {
+    private void upload_location(Item item) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
 
         params.put("phone", phone);
-        params.put("address", address);
-        params.put("longitude", longitude);
-        params.put("latitude", latitude);
-        params.put("time", time);
+        params.put("address", item.getAddress());
+        params.put("longitude", item.getLongitude());
+        params.put("latitude", item.getLatitude());
+        params.put("time", item.getTime());
+
+        params.put("code", item.getCode());
+        params.put("busines_name", item.getBizName());
+        params.put("physical_location", item.getPhysicalLocation());
+        params.put("biz_tel_num", item.getBizTelPhone());
+        params.put("biz_region", item.getRegion());
+        params.put("biz_town", item.getTown());
+        params.put("biz_landmark", item.getLandmark());
         client.post(Constants.URL_LOCATION_ADD, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -312,6 +314,9 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 try {
                     JSONObject obj = new JSONObject(responseString);
                     String resp = obj.getString("response");
+                    if(resp.toLowerCase().contains("success")){
+                        clear_fields();
+                    }
 
                     Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_SHORT).show();
 
@@ -321,6 +326,16 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             }
         });
 
-    }*/
+    }
+
+    private void clear_fields() {
+        mMaterialEditTextBussinesName.setText("");
+        mMaterialEditTextBusinesNumber.setText("");
+        mMaterialEditTextTown.setText("");
+        mMaterialEditTextPhysicalLoc.setText("");
+        mMaterialEditTextCode.setText("");
+        mMaterialEditTextLandmark.setText("");
+        mMaterialEditTextRegigion.setText("");
+    }
 
 }
