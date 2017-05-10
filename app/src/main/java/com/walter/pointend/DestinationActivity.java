@@ -71,7 +71,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     String phone = "";
 
     LocationManager locationManager;
-    ProgressDialog dialog;
+    //ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         names = prefs.getString("names", "John Doe");
         phone = prefs.getString("phone", "");
         //tvNames.setText(names);
-        dialog = new ProgressDialog(DestinationActivity.this,R.style.full_screen_dialog){
+/*        dialog = new ProgressDialog(DestinationActivity.this,R.style.full_screen_dialog){
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -91,7 +91,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 getWindow().setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
             }
         };
-        dialog.setCancelable(false);
+        dialog.setCancelable(false);*/
 
         mMaterialEditTextTown.addTextChangedListener(this);
     }
@@ -108,7 +108,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     public boolean onOptionsItemSelected(MenuItem item) {
         //TODO send items
         if (item.getItemId() == R.id.send) {
-          update_location();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -143,11 +143,13 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         String region = mMaterialEditTextRegigion.getText().toString().trim();
         String town = mMaterialEditTextTown.getText().toString().trim();
         if (!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty()) {
-            sendItem.setVisible(true);
+            //sendItem.setVisible(true);
         }
     }
 
     public void update_location() {
+        Log.d("POINTY", "Started GPS Work");
+        //locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!isGPSEnabled) {
             showSettingsAlert();
@@ -156,7 +158,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 return;
             }
             //progress.setVisibility(View.VISIBLE);
-            dialog.show();
+            //dialog.show();
 
             int attempts=0;
             while (notArrived) {
@@ -168,7 +170,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                 attempts++;
                 if (attempts<=23) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                    Log.d("STATE_GPS", "GPS Enabled");
+                    Log.d("POINTY", "GPS Enabled");
                     if (locationManager != null) {
                         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         if (location != null) {
@@ -177,15 +179,18 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
                             double longitude = location.getLongitude();
                             notArrived = false;
                             Log.d("STATE_GPS", latitude + " " + longitude);
+                            Log.d("POINTY",latitude + " " + longitude);
+
                             getMyLocationAddress(latitude, longitude);
                             //progress.setVisibility(View.INVISIBLE);
                         } else{
                             //Toast.makeText(this, "GPS is Still Getting Cordinates", Toast.LENGTH_SHORT).show();
                             Log.d("STATE_GPS", "Trying To Fetch Cordinates");
+                            Log.d("POINTY","Trying To Fetch Cordinates");
                         }
                     }
                 }else{
-                    dialog.dismiss();
+                    //dialog.dismiss();
                     stopUsingGPS();
                     break;
                 }
@@ -239,15 +244,18 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     public void onProviderEnabled(String provider) {
         //tvGPStatus.setText("GPS is Enabled");
         Log.d("GPS_STATUS", "Provider enabled");
+        Log.d("POINTY","GPS DEnabled");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         //tvGPStatus.setText("GPS is currently disabled");
         Log.d("GPS_STATUS", "Provider disabled");
+        Log.d("POINTY","GPS Disabled");
     }
 
     public void stopUsingGPS() {
+        Log.d("POINTY","Stoped Using GPS");
         if (locationManager != null) {
             locationManager.removeUpdates(this);
         }
@@ -256,6 +264,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     public void getMyLocationAddress(double lati, double longi) {
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Log.d("POINTY","Started Geo Reversing");
         //progress.setVisibility(View.VISIBLE);
         try {
 
@@ -307,7 +316,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
     private void upload_location(Item item) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-
+        Log.d("POINTY","Started Uploading Info");
         params.put("phone", phone);
         params.put("address", item.getAddress());
         params.put("longitude", item.getLongitude());
@@ -325,7 +334,7 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("SERVER", responseString);
-                dialog.dismiss();
+                //dialog.dismiss();
                 stopUsingGPS();
                 Toast.makeText(getApplicationContext(), "Failed To Upload Location Details To The Server. Try Again", Toast.LENGTH_SHORT).show();
             }
@@ -333,13 +342,15 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.d("SERVER", responseString);
-                dialog.dismiss();
+                //dialog.dismiss();
                 stopUsingGPS();
                 try {
                     JSONObject obj = new JSONObject(responseString);
                     String resp = obj.getString("response");
                     if(resp.toLowerCase().contains("succes")){
                         clear_fields();
+                        finish();
+                        startActivity(new Intent(DestinationActivity.this, AdminActivity.class));
                     }
 
                     Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_SHORT).show();
@@ -363,4 +374,22 @@ public class DestinationActivity extends AppCompatActivity implements TextWatche
         mMaterialEditTextCode.requestFocus();
     }
 
+    public void register(View view) {
+        Log.d("POINTY","Started Submitting");
+        String code = mMaterialEditTextCode.getText().toString().trim();
+        String bizName = mMaterialEditTextBussinesName.getText().toString().trim();
+        String bizPhoneNumber = mMaterialEditTextBusinesNumber.getText().toString().trim();
+        String physicalLocation = mMaterialEditTextPhysicalLoc.getText().toString().trim();
+        String region = mMaterialEditTextRegigion.getText().toString().trim();
+        String town = mMaterialEditTextTown.getText().toString().trim();
+        if (!code.isEmpty() && !bizName.isEmpty() && !bizPhoneNumber.isEmpty() && !physicalLocation.isEmpty() && !region.isEmpty() && !town.isEmpty()) {
+            //sendItem.setVisible(true);
+            update_location();
+
+        }else{
+            Toast.makeText(this, "You must provide all the required info", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }

@@ -1,8 +1,10 @@
 package com.walter.pointend;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,12 +28,6 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-        list = (ListView) findViewById(R.id.listItems);
-        data=new ArrayList<>();
-        adapter =new CustomAdapter(this,data);
-        list.setAdapter(adapter);
-        fetch_data();
-
     }
 
     private void fetch_data() {
@@ -70,5 +66,11 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    public void add_another(View view) {
+        startActivity(new Intent(this, DestinationActivity.class));
+        finish();
     }
 }
